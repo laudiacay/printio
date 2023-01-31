@@ -7,6 +7,8 @@ pub struct PrintReader<R: Read, W: Write> {
     underlying_reader: R,
     /// The writer that we are writing to as debug output for the underlying reader
     side_effect_writer: W,
+    /// label for this printreader
+    label: Option<String>,
 }
 
 impl<R: Read, W: Write> PrintReader<R, W> {
@@ -15,6 +17,15 @@ impl<R: Read, W: Write> PrintReader<R, W> {
         Self {
             underlying_reader,
             side_effect_writer,
+            label: None,
+        }
+    }
+
+    pub(crate) fn new_with_label(underlying_reader: R, side_effect_writer: W, label: String) -> Self {
+        Self {
+            underlying_reader,
+            side_effect_writer,
+            label: Some(label),
         }
     }
 }
@@ -26,12 +37,21 @@ impl<R: Read> PrintReader<R, io::Stdout> {
         Self {
             underlying_reader,
             side_effect_writer: io::stdout(),
+            label: None,
+        }
+    }
+    pub(crate) fn new_to_stdout_with_label(underlying_reader: R, label: String) -> Self {
+        Self {
+            underlying_reader,
+            side_effect_writer: io::stdout(),
+            label: Some(label),
         }
     }
 }
 impl<R: Read, W: Write> Read for PrintReader<R, W> {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         let bytes_read = self.underlying_reader.read(buf)?;
+        self.side_effect_writer.write_all(label.or(b""))?;
         self.side_effect_writer.write_all(&buf[..bytes_read])?;
         Ok(bytes_read)
     }
