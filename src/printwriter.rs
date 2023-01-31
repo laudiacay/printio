@@ -13,14 +13,14 @@ pub struct PrintWriter<W1: Write, W2: Write> {
 
 impl<W1: Write, W2: Write> PrintWriter<W1, W2> {
     /// Create a new PrintWriter that writes to the specified writer
-    pub(crate) fn new(underlying_writer: W1, side_effect_writer: W2) -> Self {
+    pub fn new(underlying_writer: W1, side_effect_writer: W2) -> Self {
         Self {
             underlying_writer,
             side_effect_writer,
             label: "".parse().unwrap(),
         }
     }
-    pub(crate) fn new_with_label(
+    pub fn new_with_label(
         underlying_writer: W1,
         side_effect_writer: W2,
         label: String,
@@ -35,14 +35,14 @@ impl<W1: Write, W2: Write> PrintWriter<W1, W2> {
 
 impl<W: Write> PrintWriter<W, io::Stdout> {
     /// Create a new PrintWriter that writes to stdout
-    pub(crate) fn new_to_stdout(underlying_writer: W) -> Self {
+    pub fn new_to_stdout(underlying_writer: W) -> Self {
         Self {
             underlying_writer,
             side_effect_writer: io::stdout(),
             label: "".parse().unwrap(),
         }
     }
-    pub(crate) fn new_to_stdout_with_label(underlying_writer: W, label: String) -> Self {
+    pub fn new_to_stdout_with_label(underlying_writer: W, label: String) -> Self {
         Self {
             underlying_writer,
             side_effect_writer: io::stdout(),

@@ -13,7 +13,7 @@ pub struct PrintReader<R: Read, W: Write> {
 
 impl<R: Read, W: Write> PrintReader<R, W> {
     /// Create a new PrintReader that writes to the specified writer
-    pub(crate) fn new(underlying_reader: R, side_effect_writer: W) -> Self {
+    pub fn new(underlying_reader: R, side_effect_writer: W) -> Self {
         Self {
             underlying_reader,
             side_effect_writer,
@@ -21,7 +21,7 @@ impl<R: Read, W: Write> PrintReader<R, W> {
         }
     }
 
-    pub(crate) fn new_with_label(
+    pub fn new_with_label(
         underlying_reader: R,
         side_effect_writer: W,
         label: String,
@@ -37,14 +37,14 @@ impl<R: Read, W: Write> PrintReader<R, W> {
 /// Read trait implementation... easy peasy
 impl<R: Read> PrintReader<R, io::Stdout> {
     /// Create a new PrintReader that writes to stdout
-    pub(crate) fn new_to_stdout(underlying_reader: R) -> Self {
+    pub fn new_to_stdout(underlying_reader: R) -> Self {
         Self {
             underlying_reader,
             side_effect_writer: io::stdout(),
             label: "".parse().unwrap(),
         }
     }
-    pub(crate) fn new_to_stdout_with_label(underlying_reader: R, label: String) -> Self {
+    pub fn new_to_stdout_with_label(underlying_reader: R, label: String) -> Self {
         Self {
             underlying_reader,
             side_effect_writer: io::stdout(),
