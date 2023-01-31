@@ -8,7 +8,7 @@ pub struct PrintWriter<W1: Write, W2: Write> {
     /// The writer that we are writing to as debug output for the underlying writer
     side_effect_writer: W2,
     /// label for this printwriter
-    label: Option<String>,
+    label: String,
 }
 
 impl<W1: Write, W2: Write> PrintWriter<W1, W2> {
@@ -17,14 +17,18 @@ impl<W1: Write, W2: Write> PrintWriter<W1, W2> {
         Self {
             underlying_writer,
             side_effect_writer,
-            label: None,
+            label: "".parse().unwrap(),
         }
     }
-    pub(crate) fn new_with_label(underlying_writer: W1, side_effect_writer: W2, label: String) -> Self {
+    pub(crate) fn new_with_label(
+        underlying_writer: W1,
+        side_effect_writer: W2,
+        label: String,
+    ) -> Self {
         Self {
             underlying_writer,
             side_effect_writer,
-            label: Some(label),
+            label,
         }
     }
 }
@@ -35,14 +39,14 @@ impl<W: Write> PrintWriter<W, io::Stdout> {
         Self {
             underlying_writer,
             side_effect_writer: io::stdout(),
-            label: None,
+            label: "".parse().unwrap(),
         }
     }
     pub(crate) fn new_to_stdout_with_label(underlying_writer: W, label: String) -> Self {
         Self {
             underlying_writer,
             side_effect_writer: io::stdout(),
-            label: Some(label),
+            label,
         }
     }
 }
@@ -51,7 +55,7 @@ impl<W: Write> PrintWriter<W, io::Stdout> {
 impl<W1: Write, W2: Write> Write for PrintWriter<W1, W2> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         let bytes_written = self.underlying_writer.write(buf)?;
-        self.side_effect_writer.write_all(label.or(b""))?;
+        self.side_effect_writer.write_all(self.label.as_ref())?;
         self.side_effect_writer.write_all(&buf[..bytes_written])?;
         Ok(bytes_written)
     }
