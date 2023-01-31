@@ -1,0 +1,22 @@
+name: Rust
+
+# Run this when a PR is opened, or when a commit is pushed to master:
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-C link-dead-code"
+
+# Queue up our Rust jobs (these all use +nightly):
+jobs:
+  run_linters:
+    uses: banyancomputer/.github/.github/workflows/rust_linters_formatters.yml@master
+  # Run the tests:
+  run_tests:
+    uses: banyancomputer/.github/.github/workflows/rust_test.yml@master
+  run_todo:
+    uses: banyancomputer/.github/.github/workflows/todo.yml@master
